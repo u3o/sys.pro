@@ -1,13 +1,10 @@
-import pytest
-
 def insert(array, index, elements):
     return array[:index] + elements + array[index+1:]
 assert insert([1, 2, 3], 1, [8, 9]) == [1, 8, 9, 3]
 
-def flatten(a, depth = -1):
-    count = 0
+def flatten(a, depth = float("inf")):
 
-    while count != depth:
+    while depth > 0:
         is_done = True
 
         for i in range(len(a)):
@@ -15,10 +12,10 @@ def flatten(a, depth = -1):
                 a = insert(a, i, a[i])
                 is_done = False
 
-        if is_done == True:
+        if is_done:
             break
 
-        count += 1
+        depth -= 1
 
     return a
 
