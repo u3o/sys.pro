@@ -1,17 +1,23 @@
-a = {"Ivanov": 97832, "Petrov": 55521, "Kuznecov": 97832}
+def solution(a):
+    res = {}
 
-res = {}
+    for i in a:
 
-for i in a:
-    vals = []
+        if list(a.values()).count(a[i]) == 1:
+            res[a[i]] = i
+        else:
+            vals = []
+            for j in a:
+                if a[i] == a[j]:
+                    vals.append(j)
+            res[a[i]] = tuple(i for i in vals)
 
-    for j in a:
-        if a[i] == a[j]:
-            vals.append(j)
+    return res
 
-    if len(vals) == 1:
-        res[a[i]] = vals[0]
-    elif len(vals) > 1:
-        res[a[i]] = tuple(i for i in vals)
+assert solution({"Ivanov": 97832, "Petrov": 55521, "Kuznecov": 97832}) == {97832: ('Ivanov', 'Kuznecov'), 55521: 'Petrov'} 
+assert solution({1: "a", 2: "b", 3: "c", 4: "b", 5: "b", 6: "d", "e": 7, 7: "d"}) == {"a": 1, "b": (2, 4, 5), "c": 3, "d": (6, 7), 7: "e"}
 
-print(res)
+try:
+    assert solution({"sdlf": []}) == {[]: "sdlf"}
+except TypeError:
+    pass
