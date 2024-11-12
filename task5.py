@@ -1,6 +1,8 @@
 def specialize(func, *args, **kwargs):
     def F(*Fargs, **Fkwargs):
         retArgs = Fargs + args
+        for i in Fkwargs:
+            kwargs[i] = Fkwargs[i]
         return func(*retArgs, **kwargs)
 
     return F
@@ -28,4 +30,3 @@ def test2():
     return plus_n(1, 2, y=4, w=2) == 9
 
 assert test2() == True
-
