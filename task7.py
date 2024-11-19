@@ -1,21 +1,22 @@
-def deprecated(since = None, will_be_removed = None):
-    def actual_deprecated(f):
-        def inner(*args, **kwargs):
-            nonlocal f
+def specialize(func, *args, **kwargs):
+    def F(*Fargs, **Fkwargs):
+        retArgs = Fargs + args
+        for i in Fkwargs:
+            kwargs[i] = Fkwargs[i]
+        return func(*retArgs, **kwargs)
+    return F
 
-            print(f"Warning: function {f.__name__} is deprecated", end = "")
-            print(f" since version {since}.", end = " ") if since != None else print(".", end = " ")
-            print(f"It will be removed in", end = " ")
-            print(f"version {will_be_removed}.") if will_be_removed != None else print("future versions.")
-
-            ret = f(*args, **kwargs)
-            return ret
-
-        return inner
-    return actual_deprecated
+def deprecated(f = None, since = None, will_be_removed = None):
+    if f is None:
+        return specialize(deprecated, since = since, will_be_removed = will_be_removed)
+        
+    def inner(*args, **kwargs):
+        print(f"Warning: function {f.__name__} is deprecated{(" since version " + since) if since != None else ""}. It will be removed in {("version " + will_be_removed) if will_be_removed != None else "future versions"}.")
+        return f(*args, **kwargs)
+    return inner
 
 #"tests"
-@deprecated()
+@deprecated
 def func1(*args):
     print(f"args: {args}")
 func1(1,'asdf',3)
@@ -34,3 +35,8 @@ func4(3, 45)
 def func3(*args):
     print(f"args: {args}")
 func3('dddd', 3, 45)
+
+@deprecated
+def func5():
+    print("hi")
+func5()
